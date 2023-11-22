@@ -13,12 +13,12 @@ class LeftDrawer extends StatelessWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blueGrey,
+              color: Colors.indigo,
             ),
             child: Column(
               children: [
                 Text(
-                  'Backpack',
+                  'Quest 99',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
@@ -27,23 +27,20 @@ class LeftDrawer extends StatelessWidget {
                   ),
                 ),
                 Padding(padding: EdgeInsets.all(10)),
-                Text(
-                  "Add and See your Quest Item!",
-                  // Menambahkan gaya teks dengan center alignment, font ukuran 15, warna putih, dan weight biasa
+                Text("Begin Your Quest With Good Items",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.white,
                     fontWeight: FontWeight.normal,
+                    color: Colors.white,
                   ),
                 ),
               ],
             ),
           ),
-          // Routing
           ListTile(
             leading: const Icon(Icons.home_outlined),
-            title: const Text('Home'),
+            title: const Text('Halaman Utama'),
             // Bagian redirection ke MyHomePage
             onTap: () {
               Navigator.pushReplacement(
@@ -56,12 +53,12 @@ class LeftDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.checklist),
             title: const Text('Open Backpack'),
-            // Bagian redirection ke ShopFormPage
+            // Bagian redirection ke ItemPager
             onTap: () {
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ItemsPage(),
+                    builder: (context) => const ItemPage(),
                   ));
             },
           ),
@@ -70,13 +67,11 @@ class LeftDrawer extends StatelessWidget {
             title: const Text('Add Items'),
             // Bagian redirection ke ShopFormPage
             onTap: () {
-              /*
-              Routing ke ShopFormPage di sini, setelah halaman ShopFormPage sudah dibuat.
-              */
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const ItemFormPage()));
+                    builder: (context) => const ItemFormPage(),
+                  ));
             },
           ),
         ],

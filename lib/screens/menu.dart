@@ -1,14 +1,14 @@
 import 'package:quest99/widgets/left_drawer.dart';
-import 'package:quest99/widgets/menu_card.dart';
+import 'package:quest99/widgets/item_card.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({Key? key}) : super(key: key);
 
-  final List<ShopItem> items = [
-    ShopItem("Open Backpack", Icons.checklist, Colors.blueGrey.shade600),
-    ShopItem("Add Items", Icons.add_shopping_cart, Colors.purple.shade900),
-    ShopItem("Logout", Icons.logout, Colors.brown.shade800),
+  final List<Quest> items = [
+    Quest("Open Backpack", Icons.checklist, Colors.blueGrey.shade600),
+    Quest("Add Items", Icons.add_shopping_cart, Colors.purple.shade900),
+    Quest("Logout", Icons.logout, Colors.brown.shade800),
   ];
 
   @override
@@ -51,9 +51,9 @@ class MyHomePage extends StatelessWidget {
                 mainAxisSpacing: 10,
                 crossAxisCount: 3,
                 shrinkWrap: true,
-                children: items.map((ShopItem item) {
+                children: items.map((Quest item) {
                   // Iterasi untuk setiap item
-                  return MenuCard(item);
+                  return QuestCard(item);
                 }).toList(),
               ),
             ],

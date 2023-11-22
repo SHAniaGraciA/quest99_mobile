@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:quest99/widgets/left_drawer.dart';
-import 'package:quest99/widgets/menu_card.dart';
+import 'package:quest99/widgets/item_card.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+
+import 'menu.dart';
 
 class ItemFormPage extends StatefulWidget {
   const ItemFormPage({super.key});
@@ -9,7 +15,7 @@ class ItemFormPage extends StatefulWidget {
   State<ItemFormPage> createState() => _ItemFormPageState();
 }
 
-List<Item> items = [];
+List<QuestItem> items = [];
 
 class _ItemFormPageState extends State<ItemFormPage> {
   final _formKey = GlobalKey<FormState>();
@@ -18,196 +24,172 @@ class _ItemFormPageState extends State<ItemFormPage> {
   String _category = "";
   int _amount = 0;
 
-
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Add Your Item',
+        title: const Center(
+          child: Text(
+            'Add Item',
+          ),
         ),
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Colors.indigo,
         foregroundColor: Colors.white,
       ),
-
-      // Menambahkan drawer yang sudah dibuat di sini
       drawer: const LeftDrawer(),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Item Name",
-                  labelText: "Item Name",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Nama Item",
+                      labelText: "Nama Item",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _name = value!;
+                      });
+                    },
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Nama tidak boleh kosong!";
+                      }
+                      return null;
+                    },
                   ),
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _name = value!;
-                  });
-                },
-                onSaved: (String? value) {
-                  setState(() {
-                    // Menambahkan variabel yang sesuai
-                    _name = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Name cannot be empty!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Description",
-                  labelText: "Description",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Deskripsi",
+                      labelText: "Deskripsi",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _description = value!;
+                      });
+                    },
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Deskripsi tidak boleh kosong!";
+                      }
+                      return null;
+                    },
                   ),
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    // Menambahkan variabel yang sesuai
-                    _description = value!;
-                  });
-                },
-                onSaved: (String? value) {
-                  setState(() {
-                    // Menambahkan variabel yang sesuai
-                    _description = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Description cannot be empty!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Category",
-                  labelText: "Category",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Kategori Item",
+                      labelText: "Kategori Item",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _category = value!;
+                      });
+                    },
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Kategori tidak boleh kosong!";
+                      }
+                      return null;
+                    },
                   ),
                 ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _category = value!;
-                  });
-                },
-                onSaved: (String? value) {
-                  setState(() {
-                    // Menambahkan variabel yang sesuai
-                    _category = value!;
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Category cannot be empty!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Amount",
-                  labelText: "Amount",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    _amount = int.parse(value!);
-                  });
-                },
-                validator: (String? value) {
-                  if (value == null || value.isEmpty) {
-                    return "Amount cannot be empty!";
-                  }
-                  if (int.tryParse(value) == null) {
-                    return "Amount must be a valid integer!";
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue.shade900),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      items.add(Item(
-                        name: _name,
-                        description: _description,
-                        category: _category,
-                        amount: _amount,
 
-                      ));
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Item saved successfully'),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Memunculkan value-value lainnya
-                                  Text('Name: $_name'),
-                                  Text('Description: $_description'),
-                                  Text('Category: $_category'),
-                                  Text('Amount: $_amount'),
-
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      _formKey.currentState!.reset();
-                    }
-                  },
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Jumlah",
+                      labelText: "Jumlah",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                    ),
+                    onChanged: (String? value) {
+                      setState(() {
+                        _amount = int.parse(value!);
+                      });
+                    },
+                    validator: (String? value) {
+                      if (value == null || value.isEmpty) {
+                        return "Jumlah tidak boleh kosong!";
+                      }
+                      if (int.tryParse(value) == null) {
+                        return "Jumlah harus berupa angka!";
+                      }
+                      if (int.tryParse(value)! <= 0) {
+                        return "Jumlah harus angka positif!";
+                      }
+                      return null;
+                    },
                   ),
                 ),
-              ),
-            ),
-          ]),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                        MaterialStateProperty.all(Colors.indigo),
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          // Kirim ke Django dan tunggu respons
+                          final response = await request.postJson(
+                              "https://natanael-bonaparte-tugas.pbp.cs.ui.ac.id/create-flutter/",
+                              jsonEncode(<String, String>{
+                                'name': _name,
+                                'description': _description,
+                                'category': _category,
+                                'amount': _amount.toString(),
+                              }));
+                          if (response['status'] == 'success') {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text("Item baru berhasil disimpan!"),
+                            ));
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyHomePage()),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content:
+                              Text("Terdapat kesalahan, silakan coba lagi."),
+                            ));
+                          }
+                        }
+                      },
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
         ),
       ),
     );
